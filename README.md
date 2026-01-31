@@ -1,6 +1,6 @@
 # SkyDrive Enterprise (企业网盘系统)
 
-SkyDrive Enterprise 是一个基于现代技术栈构建的企业级网盘解决方案。后端采用 **FastAPI** 提供高性能 API 服务，前端采用 **Vite + Vue/React** (视具体实现而定) 构建响应式用户界面。支持文件上传、下载、管理以及邮件通知等功能。
+SkyDrive Enterprise 是一个基于现代技术栈构建的轻量级网盘。后端采用 **FastAPI** 提供高性能 API 服务，前端采用 **Vite + React** 构建响应式用户界面。支持文件上传、下载、管理以及邮件通知等功能。
 
 ---
 
@@ -23,16 +23,61 @@ SkyDrive Enterprise 是一个基于现代技术栈构建的企业级网盘解决
 agent-test/
 ├── backend/                # 后端项目根目录
 │   ├── app/                # 应用核心代码
-│   │   ├── core/           # 核心配置
 │   │   ├── api/            # API 路由定义
-│   │   ├── models/         # 数据库模型
+│   │   │   ├── api_v1/     # V1 版本 API
+│   │   │   │   └── endpoints/
+│   │   │   │       ├── files.py    # 文件管理接口
+│   │   │   │       ├── login.py    # 登录认证接口
+│   │   │   │       ├── shares.py   # 文件分享接口
+│   │   │   │       └── users.py    # 用户管理接口
+│   │   │   └── deps.py     # 依赖注入 (如获取当前用户)
+│   │   ├── core/           # 核心配置
+│   │   │   ├── config.py   # 配置加载 (Pydantic)
+│   │   │   └── security.py # 安全相关 (JWT, 密码哈希)
+│   │   ├── crud/           # 数据库 CRUD 操作
+│   │   │   ├── crud_file.py
+│   │   │   ├── crud_share.py
+│   │   │   └── crud_user.py
+│   │   ├── db/             # 数据库连接与会话管理
+│   │   │   ├── base.py     # 导入所有模型供 Alembic 使用
+│   │   │   └── session.py  # 数据库会话工厂
+│   │   ├── models/         # 数据库模型 (SQLAlchemy)
+│   │   │   ├── file.py
+│   │   │   ├── share.py
+│   │   │   └── user.py
+│   │   ├── schemas/        # Pydantic 数据模型 (请求/响应)
+│   │   │   ├── auth.py
+│   │   │   ├── file.py
+│   │   │   ├── share.py
+│   │   │   ├── token.py
+│   │   │   └── user.py
+│   │   ├── utils/          # 工具函数
+│   │   │   └── auth_utils.py # 验证码、签名验证等
 │   │   ├── .env            # [重要] 配置文件
+│   │   ├── initial_data.py # 初始化数据脚本
 │   │   └── main.py         # 程序入口
 │   ├── upload_storage/     # 默认文件存储目录
 │   ├── Dockerfile          # Docker 构建文件
 │   ├── docker-compose.yml  # Docker 编排文件
+│   ├── prestart.sh         # 启动前置脚本
 │   └── requirements.txt    # Python 依赖列表
-├── frontend/               # 前端项目根目录 (假设存在)
+├── frontend/               # 前端项目根目录
+│   ├── public/             # 静态资源
+│   ├── src/                # 源代码
+│   │   ├── components/     # 通用组件
+│   │   │   └── PrivateRoute.tsx # 路由守卫组件
+│   │   ├── pages/          # 页面组件
+│   │   │   ├── Dashboard.tsx    # 主面板 (文件列表)
+│   │   │   ├── Login.tsx        # 登录/注册页
+│   │   │   └── Share.tsx        # 分享链接访问页
+│   │   ├── utils/          # 工具函数
+│   │   │   └── crypto.ts        # 加密与签名工具
+│   │   ├── App.tsx         # 根组件 (路由配置)
+│   │   └── main.tsx        # 入口文件
+│   ├── index.html          # HTML 模板
+│   ├── package.json        # 项目依赖配置
+│   ├── tsconfig.json       # TypeScript 配置
+│   └── vite.config.ts      # Vite 配置
 └── README.md               # 项目说明文档
 ```
 
