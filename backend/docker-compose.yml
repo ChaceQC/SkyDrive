@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: skydrive-backend
+    ports:
+      - "8899:8899"
+    volumes:
+      - .:/app
+      - ./upload_storage:/app/upload_storage
+    env_file:
+      - app/.env
+    environment:
+      - PYTHONPATH=/app
+      # Override connection string for Docker network
+      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - skydrive-network
+
+  db:
+    image: mysql:8.0
+    container_name: skydrive-db
+    restart: always
+    env_file:
+      - app/.env
+    # Environment variables are loaded from app/.env
+    # MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD are all defined there
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # - ./full_migration.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - skydrive-network
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  db_data:
+
+networks:
+  skydrive-network:
+    driver: bridge

@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+python-multipart
+pydantic-settings
+python-jose[cryptography]
+passlib[argon2]
+argon2-cffi
+alembic
+Pillow
+pandas
+openpyxl
+fastapi-mail
