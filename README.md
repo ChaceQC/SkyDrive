@@ -1,4 +1,4 @@
-# SkyDrive Enterprise (企业网盘系统)
+# SkyDrive Enterprise (轻量网盘系统)
 
 SkyDrive Enterprise 是一个基于现代技术栈构建的轻量级网盘。后端采用 **FastAPI** 提供高性能 API 服务，前端采用 **Vite + React** 构建响应式用户界面。支持文件上传、下载、管理以及邮件通知等功能。
 
